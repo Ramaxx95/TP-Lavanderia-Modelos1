@@ -231,6 +231,10 @@ n 19 4
 n 20 5
 
 *Como lo voy a resolver:
+ Nos dicen que hay prendas que pueden lavarse con otras. Por lo tanto, lo mejor seria encontrar la combinacion de ropas compatibles para poder lavar en un solo lavado, y así 
+ poder minimizar la cantidad total de tiempo que toma lavar todas las prendas y, consecuentemente, minimizar la cantidad de lavados totales.
+ Nuestro problema entonces va a consistir primero de armar los distintos "paquetes" de ropa que se van a lavar en un solo lavado y luego encontrar la combinacion de paquetes 
+ que produzca la minima cantidad de horas totales que tomara lavar todo.
 
 *Cambios:
 
