@@ -237,8 +237,9 @@ n 20 5
  que produzca la minima cantidad de horas totales que tomara lavar todo.
 
 *Cambios:
+Ninguno
 
 *Comentarios finales:
-
+El problema lo resolvi mayoritariamente a mano armando una grilla de compatibilidad entre prendas.
 
  
