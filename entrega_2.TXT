@@ -1,0 +1,11 @@
+*Como lo voy a resolver:
+	Voy a alterar el codigo que nos dejaron de herramienta para que lea el archivo de texto y arme una matriz que contenga la compatibilidad entre prendas
+	y un vector que posea el tiempo de lavado de cada prenda.
+	Decidi resolverlo usando clases para mantener el codigo un poco mas prolijo y facil de usar/editar: estas clases van a ser Prenda(la cual va a tener una 
+	lista de que Prendas son compatibles con la misma y el tiempo de lavado), Lavado(va a tener una lista de Prendas que lo componen y un tiempo de lavado 
+	correspondiente la Prenda que mas tarda) y Solucion(contiene un lista de Lavados y el tiempo total que vamos a tardar en lavar todas las pruebas en cuestion)
+
+*Cambios:
+	7/11: Ya tenemos todos los agentes que interactuan en este problema. Ahora hay que codear el algoritmo que busque una solucion optima
+
+*Comentarios finales:
