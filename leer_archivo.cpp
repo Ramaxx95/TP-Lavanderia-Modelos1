@@ -96,7 +96,7 @@ void armar_matriz() {
 
 	int prenda, incompatibleCon, tiempoLavado;
 
-	//armamos la lista de incompatibilidad y vector de pesos
+	//armamos la lista de incompatibilidad y vector de pesos(tiempo de lavado)
 	while (!stop) {
 		c = *pp++;
 		switch (c) {
@@ -134,6 +134,7 @@ void armar_matriz() {
 	}
 
 	//PARA DEBUGGING
+	/*
 	for (int k = 0; k < Nr_vert; k++) {
 		for (int z = 0; z < Nr_vert; z++) {
 			printf("%d", (int) matriz[k][z]);
@@ -143,6 +144,7 @@ void armar_matriz() {
 	for (int p = 0; p < Nr_vert; p++) {
 		printf("prenda: %d tarda en lavarse: %d\n", p + 1, pesos[p]);
 	}
+	*/
 	//END DEBUGGING
 
 }
