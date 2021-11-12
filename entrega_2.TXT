@@ -7,5 +7,7 @@
 
 *Cambios:
 	7/11: Ya tenemos todos los agentes que interactuan en este problema. Ahora hay que codear el algoritmo que busque una solucion optima
+	12/11: Implemente una forma de buscar la prenda minima compatible para una prenda especifica y a partir de eso armar un lavado. El problema es que como estan
+		armadas las compatibilidades, los lavados siempre terminan siendo de 2 prendas nada mas y la minima se repite constantemente dentro de distintos lavados.
 
 *Comentarios finales:
