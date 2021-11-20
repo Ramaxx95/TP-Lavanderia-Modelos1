@@ -3,157 +3,233 @@
 #include "leer_archivo.h"
 #include "Solucion.h"
 
-void prueba_lavado() {
+Prenda* buscarPrendaMinima(vector<Prenda*> prendas) {
 
-	Lavado lavado_prueba(1);
-	vector<Prenda> prendas = devolverListaDePrendas();
-	Prenda* prenda1 = &prendas[0];	//prenda 1, lavado 8
-	Prenda* prenda2 = &prendas[13];	//prenda 14, lavado 1
-	Prenda* prenda3 = &prendas[14];	//prenda 15, lavado 5
-	Prenda* prenda4 = &prendas[19];	//prenda 20, lavado 5
-	
+	Prenda* prenda_minima = prendas[0];
 
-	printf("******\n\nPrimera Prueba: se aniade la prenda 3 al lavado\n\n******\n");
+	for (int i = 1; i < prendas.size(); i++) {
 
-	lavado_prueba.aniadirPrenda(prenda3);
-	if (lavado_prueba.devolverTiempo() == 5) {
+		if (prendas[i]->devolverTiempoDeLavado() < prenda_minima->devolverTiempoDeLavado()) {
 
-		printf("La prueba se realizo exitosamente\n");
+			prenda_minima = prendas[i];
 
-	}
-	else {
-
-		printf("La prueba ha fallado\n");
-
-	}
-
-	printf("******\n\nSegunda Prueba: se aniade la prenda 1 al lavado\n\n******\n");
-
-	lavado_prueba.aniadirPrenda(prenda1);
-	if (lavado_prueba.devolverTiempo() == 8) {
-
-		printf("La prueba se realizo exitosamente\n");
-		if (lavado_prueba.devolverCantidadDePrendasEnElLavado() == 2) {
-			printf("Ahora el lavado esta compuesto por las prendas 1 y 3\n");
 		}
 
 	}
-	else {
 
-		printf("La prueba ha fallado\n");
+	return prenda_minima;
 
-	}
+}
 
-	printf("******\n\nTercera Prueba: se aniade la prenda 2 al lavado pero esta no es compatible\n\n******\n");
+//elimina todo lavado repetido dentro de la lista
+void limpiarListaDeLavados(vector<Lavado>* lavados) {
 
-	lavado_prueba.aniadirPrenda(prenda2);
-	if (lavado_prueba.devolverCantidadDePrendasEnElLavado() == 2) {
+	if (lavados->size() > 0) {
 
-		printf("La prueba se realizo exitosamente\n");
-		if (lavado_prueba.devolverTiempo() == 8) {
-			printf("el tiempo de lavado no cambio\n");
+		for (int i = 0; i < lavados->size(); i++) {
+
+			for (int j = 0; j < lavados->size(); j++) {
+
+				if ((lavados->at(j).esIgualA(&lavados->at(i))) && (i != j)) {
+
+					lavados->erase(lavados->begin() + j);
+
+				}
+
+			}
+
 		}
-
-	}
-	else {
-
-		printf("La prueba ha fallado\n");
-
-	}
-
-	printf("******\n\nCuarta Prueba: se aniade la prenda 4 al lavado \n\n******\n");
-
-	lavado_prueba.aniadirPrenda(prenda4);
-	if (lavado_prueba.devolverCantidadDePrendasEnElLavado() == 3) {
-
-		printf("La prueba se realizo exitosamente\n");
-
-	}
-	else {
-
-		printf("La prueba ha fallado\n");
 
 	}
 
 }
 
-void prueba_solucion() {
+//analiza que Prendas faltan en la solucion y agrega la cantidad de lavados necesarios
+//para completar el set de Prendas faltantes
+void completarRestoDeLasPrendas(Solucion* sol) {
 
-	Lavado lavado_prueba(1);
-	Lavado otro_lavado(2);
-	vector<Prenda> prendas = devolverListaDePrendas();
-	Solucion sol(prendas.size());
 
-	lavado_prueba.aniadirPrenda(&prendas[7]);
-	lavado_prueba.aniadirPrenda(&prendas[13]);
-	lavado_prueba.aniadirPrenda(&prendas[18]);
+	for (int i = 0; i < sol->devolverMaxPrendas(); i++) {
 
-	otro_lavado.aniadirPrenda(&prendas[4]);
-	otro_lavado.aniadirPrenda(&prendas[14]);
-	otro_lavado.aniadirPrenda(&prendas[17]);
+		if (!sol->seEncuentraLaPrendaDeNombre(i + 1)) {
 
-	sol.agregarLavado(&lavado_prueba);
+			Lavado lavado_aux;
+			lavado_aux.aniadirPrenda(&devolverListaDePrendas()[i]);
 
-	/*PRUEBA 1*/
-	printf("Prueba 1:\n la solucion solo consiste del lavado 1 (prendas 8, 14 y 19)\n");
-	sol.mostrarLavados();
-	printf("la duracion de este lavado debe ser 4\n");
-	printf("la duracion es de: %d\n\n", sol.devolverTiempoTotal());
+			for (int j = 0; j < sol->devolverMaxPrendas(); j++) {
 
-	/*PRUEBA 2*/
-	printf("Prueba 2:\n agregamos un segundo lavado que consiste de las prendas 5, 15 y 18\n");
-	sol.agregarLavado(&otro_lavado);
-	sol.mostrarLavados();
-	printf("la duracion ahora deberia ser de 9\n");
-	printf("la duracion es de: %d\n\n", sol.devolverTiempoTotal());
+				if ((!sol->seEncuentraLaPrendaDeNombre(j + 1)) && (j != i)) {
 
-	/*PRUEBA 3*/
-	printf("Prueba 3:\n vamos a ver que nos indiquen que prendas nos faltan para completar el set\n");
-	printf("Nos deberian decir que faltan: \n");
-	printf("1, 2, 3, 4, 6, 7, 9, 10, 11, 12, 13, 16, 17, 20\n");
-	sol.mostrarPrendasFaltantes();
+					if (lavado_aux.esCompatibleCon(&devolverListaDePrendas()[j])) {
 
-	/*PRUEBA 4*/
-	printf("Prueba 4:\n simulamos una solucion que debe dar un tiempo total de 63\n");
-	Lavado lavado3(3);
-	Lavado lavado4(4);
-	Lavado lavado5(5);
-	Lavado lavado6(6);
-	Lavado lavado7(7);
-	Lavado lavado8(8);
+						lavado_aux.aniadirPrenda(&devolverListaDePrendas()[j]);
 
-	lavado3.aniadirPrenda(&prendas[1]);
-	lavado3.aniadirPrenda(&prendas[11]);
-	lavado3.aniadirPrenda(&prendas[16]);
+					}
 
-	lavado4.aniadirPrenda(&prendas[2]);
-	lavado4.aniadirPrenda(&prendas[15]);
-	lavado4.aniadirPrenda(&prendas[19]);
+				}
+			}
 
-	lavado5.aniadirPrenda(&prendas[5]);
-	lavado5.aniadirPrenda(&prendas[8]);
+			sol->agregarLavado(&lavado_aux);
 
-	lavado6.aniadirPrenda(&prendas[6]);
-	lavado6.aniadirPrenda(&prendas[10]);
+		}
+		
+	}
 
-	lavado7.aniadirPrenda(&prendas[0]);
-	lavado7.aniadirPrenda(&prendas[12]);
+}
 
-	lavado8.aniadirPrenda(&prendas[3]);
-	lavado8.aniadirPrenda(&prendas[9]);
+//De una lista de lavados, devuelve la cantidad indicada de lavados cuyo tiempo son los mas chicos 
+//de la lista especificada
+vector<Lavado>* buscarLavadosConMenorTiempoDe(vector<Lavado>* lavados, int cant_lavados) {
 
+	vector<Lavado>* lavados_minimos = new vector<Lavado>;
+
+	for (int i = 0; i < lavados->size(); i++) {
+
+		if (i == 0) {
+
+			lavados_minimos->push_back(lavados->at(i));
+
+		}
+		else {
+
+			for (int j = 0; j < lavados_minimos->size(); j++) {
+
+				if (lavados->at(i).devolverTiempo() <= lavados_minimos->at(j).devolverTiempo()) {
+
+					lavados_minimos->insert(lavados_minimos->begin() + j, lavados->at(i));
+					j = lavados_minimos->size();
+
+					if (lavados_minimos->size() > cant_lavados) {
+
+						lavados_minimos->pop_back();
+
+					}
+
+				}
+
+			}
+
+		}
+
+	}
+
+	return lavados_minimos;
+
+}
+
+//funcion RECURSiVA
+//recorre cada compatible de "prenda" y si es compatible con el "lavado" completo->la agrega
+void buscarSiguienteCompatiblePara(Prenda* prenda, Lavado* lavado, int a_partir_de, vector<Lavado>* lavados) {
+
+	Lavado aux(lavados->size());
+	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
+
+	for (int i = a_partir_de; i < compatibles.size(); i++) {
+
+		if (lavado->esCompatibleCon(compatibles[i])) {
+
+			aux.aniadirPrenda(compatibles[i]);
+			lavados->push_back(aux);
+			buscarSiguienteCompatiblePara(prenda, &aux, a_partir_de + 1, lavados);
+
+		}
+
+		limpiarListaDeLavados(lavados);
+
+	}
+
+	for (int j = 0; j < lavado->devolverCantidadDePrendasEnElLavado() - 1; j++) {
+
+		aux.aniadirPrenda(&lavado->devolverPrendas()[j]);
+		lavados->push_back(aux);
+
+	}
+
+
+}
+
+//busca toda combinacion de lavado para una prenda en especial y las guarda de menor a mayor en una lista
+//de lavados
+//TODO: funciona pero solo devuelve la cantidad que tiene de compatibles la prenda en si (para la
+//prenda 1, solo devuelve 8 lavados cuando tendria que devolver 24)
+
+void buscarPosiblesLavadosPara(Prenda* prenda) {
+
+	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
+	vector<Lavado> lavados;
+
+	int num_lavado = 0;
+
+	for (int i = 0; i < compatibles.size(); i++) {
+
+			Lavado lavado_aux(num_lavado);
+			lavado_aux.aniadirPrenda(prenda);
+
+			if (lavado_aux.esCompatibleCon(compatibles[i])){
+
+				lavado_aux.aniadirPrenda(compatibles[i]);
+				buscarSiguienteCompatiblePara(prenda, &lavado_aux, i, &lavados);
+			
+			}
+			/*
+			if (lavados.size() > 0) {
+				for (int k = 0; k < lavados.size(); k++) { 
+					
+					if (lavados.at(k).esIgualA(&lavado_aux)) {
+
+						lavados.erase(lavados.begin()+k);
+
+					}
+				}
+					
+			}
+			*/
+			lavados.push_back(lavado_aux);
+			num_lavado++;
+		
+	}
+
+	/*DEBUG*/
 	
-	sol.agregarLavado(&lavado3);
-	sol.agregarLavado(&lavado4);
-	sol.agregarLavado(&lavado5);
-	sol.agregarLavado(&lavado6);
-	sol.agregarLavado(&lavado7);
-	sol.agregarLavado(&lavado8);
-
+	Solucion sol(385);//hardcodeo
+	sol.agregarLavados(lavados);
+	printf("Cantidad de lavados posibles para la Prenda %d\n\n", prenda->devolverNombre());
 	sol.mostrarLavados();
-	printf("El tiempo deberia ser 63\n");
-	printf("El tiempo total es de: %d\n", sol.devolverTiempoTotal());
-	sol.mostrarPrendasFaltantes();
+	
+	Solucion sol_min(385);//hardcodeo
+	vector<Lavado>* lav_min = buscarLavadosConMenorTiempoDe(&lavados, 7);
+	sol_min.agregarLavados(*lav_min);
+	printf("7 lavados con menor tiempo de lavado para la Prenda 1\n\n");
+	sol_min.mostrarLavados();
+	/*END DEBUG*/
+}
+
+//POSIBLE FUNCION QUE ENCOMPASE LA BUSQUEDA DE LA SOLUCION OPTIMA
+void buscarLavadosMinimos(vector<Prenda> prendas, Solucion* sol) {
+
+	vector<Lavado> lavados_minimos;
+
+	for (int i = 0; i < prendas.size() / 2; i++) {
+
+		vector<Prenda*> compatibles = prendas[i].obtenerListaDeCompatibles();
+		Lavado lavado_a_agregar(i);
+		lavado_a_agregar.aniadirPrenda(&prendas[i]);
+
+
+		lavados_minimos.push_back(lavado_a_agregar);
+
+	}
+
+	sol->agregarLavados(lavados_minimos);
+
+	sol->mostrarLavados();
+	printf("tiempo: %d\n", sol->devolverTiempoTotal());
+
+}
+
+/*PARA HACER PRUEBAS*/
+void prueba() {
+
 
 }
 
@@ -169,9 +245,71 @@ int main(int argc, char* argv[]) {
 
 	}
 
+	vector<Prenda> lista = devolverListaDePrendas();
+	Solucion solucion(lista.size()); 
 
-	//prueba_lavado();
-	prueba_solucion();
+	//buscarLavadosMinimos(devolverListaDePrendas(), &solucion);
+	//buscarPosiblesLavadosPara(&lista[0]);
+	prueba();
 	liberar_memoria();
 }
 
+
+/*******BACKUP*******/
+//busca toda combinacion de lavado para una prenda en especial y las guarda de menor a mayor en una lista
+//de lavados
+//TODO: funciona en el contexto del primer tp. Expandir para entrar en el esquema del segundo tp
+
+/*void buscarPosiblesLavadosPara(Prenda* prenda) {
+
+	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
+	vector<Lavado> lavados;
+
+	int num_lavado = 0;
+
+	for (int i = 0; i < compatibles.size(); i++) {
+
+		if (prenda->esCompatibleCon(compatibles[i])) {
+
+			for (int j = 0; j < compatibles[i]->devolverCantidadDeCompatibilidades(); j++) {
+
+				Lavado lavado_aux(num_lavado);
+				lavado_aux.aniadirPrenda(prenda);
+				lavado_aux.aniadirPrenda(compatibles[i]);
+
+				bool es_comp = true;
+				int indice = 0;
+				while ((lavado_aux.devolverCantidadDePrendasEnElLavado() - indice > 0) && es_comp) {
+
+					//antes era copatibles[i]
+					es_comp = lavado_aux.devolverPrendas()[indice].esCompatibleCon(compatibles[i]->obtenerListaDeCompatibles()[j]);
+					indice++;
+
+				}
+
+				if (es_comp)
+				{
+					lavado_aux.aniadirPrenda(compatibles[i]->obtenerListaDeCompatibles()[j]);
+				}
+
+				if (lavados.size() > 0) {
+
+					for (int k = 0; k < lavados.size(); k++) {
+
+						if (lavados.at(k).esIgualA(&lavado_aux)) {
+
+							lavados.erase(lavados.begin() + k);
+
+						}
+					}
+
+				}
+				lavados.push_back(lavado_aux);
+				num_lavado++;
+			}
+
+		}
+
+	}
+
+}*/

@@ -9,7 +9,19 @@ Prenda::Prenda(int nombre, int tiempo) {
 
 void Prenda::aniadirPrendaCompatible(Prenda* prenda) {
 
-	this->lista_compatibles.push_back(*prenda);
+	this->lista_compatibles.push_back(prenda);
+
+}
+
+void Prenda::cambiarNombre(int nombre_nuevo) {
+
+	this->nombre = nombre_nuevo;
+
+}
+
+void Prenda::cambiarTiempo(int tiempo_nuevo) {
+
+	this->tiempo_lavado = tiempo_nuevo;
 
 }
 
@@ -33,7 +45,13 @@ int Prenda::devolverCantidadDeCompatibilidades() {
 
 Prenda* Prenda::obtenerCompatible(int indice) {
 
-	return &this->lista_compatibles[indice];
+	return this->lista_compatibles[indice];
+
+}
+
+vector<Prenda*> Prenda::obtenerListaDeCompatibles() {
+
+	return this->lista_compatibles;
 
 }
 
@@ -48,7 +66,7 @@ bool Prenda::esCompatibleCon(Prenda* prenda) {
 
 	while ((i < this->lista_compatibles.size()) && resultado == false) {
 
-		nombre_pren_lista = this->lista_compatibles[i].devolverNombre();
+		nombre_pren_lista = this->lista_compatibles[i]->devolverNombre();
 
 		if (nombre_prenda == nombre_pren_lista) {
 

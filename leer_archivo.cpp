@@ -112,7 +112,7 @@ void armar_matriz() {
 
 		case 'e':
 			sscanf(pp, "%d %d\n", &prenda, &incompatibleCon);
-			matriz[prenda - 1][incompatibleCon - 1] = false;
+			matriz[prenda - 1][incompatibleCon - 1] = false;//matriz[prenda - 1][incompatibleCon - 1] 
 			while ((c = *pp++) != '\n' && c != '\0')
 				;
 			break;
@@ -135,12 +135,13 @@ void armar_matriz() {
 
 	//PARA DEBUGGING
 	/*
-	for (int k = 0; k < Nr_vert; k++) {
-		for (int z = 0; z < Nr_vert; z++) {
-			printf("%d", (int) matriz[k][z]);
-		}
-		printf("\n");
+	for (int k = 84; k < 84 + 5; k++) {
+		
+		printf("%d", (int) matriz[1][k]);
+		
 	}
+	printf("\n");
+	
 	for (int p = 0; p < Nr_vert; p++) {
 		printf("prenda: %d tarda en lavarse: %d\n", p + 1, pesos[p]);
 	}
@@ -173,18 +174,6 @@ void crear_prendas() {
 
 		Prenda prenda_a_agregar(i + 1, pesos[i]);
 
-		for (int j = 0; j < Nr_vert; j++) {
-
-			if (matriz[i][j] == 1) {
-
-				Prenda prenda_aux(j + 1, pesos[j]);
-
-				prenda_a_agregar.aniadirPrendaCompatible(&prenda_aux);
-
-			}
-			
-		}
-
 		prendas.push_back(prenda_a_agregar);
 
 		/*
@@ -196,6 +185,19 @@ void crear_prendas() {
 		}
 		//END DEBUG
 		*/
+
+	}
+	for (int i = 0; i < Nr_vert; i++) {
+
+		for (int j = 0; j < Nr_vert; j++) {
+
+			if (matriz[i][j] == 1) {
+
+				prendas[i].aniadirPrendaCompatible(&prendas[j]);
+
+			}
+
+		}
 
 	}
 

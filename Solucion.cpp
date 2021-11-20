@@ -10,15 +10,35 @@ Solucion::Solucion(int max_prendas) {
 
 void Solucion::agregarLavado(Lavado* lavado) {
 
-	this->lavados.push_back(*lavado);
-	this->cant_total_prendas += lavado->devolverCantidadDePrendasEnElLavado();
-	this->tiempo_neto += lavado->devolverTiempo();
+	if (!yaPoseeAlgunaPrendaDeEste(lavado)) {
+
+		this->lavados.push_back(*lavado);
+		this->cant_total_prendas += lavado->devolverCantidadDePrendasEnElLavado();
+		this->tiempo_neto += lavado->devolverTiempo();
+
+	}
+	
+}
+
+void Solucion::agregarLavados(vector<Lavado> lavados) {
+
+	for (int i = 0; i < lavados.size(); i++) {
+
+		this->agregarLavado(&lavados[i]);
+
+	}
 
 }
 
 int Solucion::devolverTiempoTotal() {
 
 	return this->tiempo_neto;
+
+}
+
+int Solucion::devolverMaxPrendas() {
+
+	return this->max_cant_prendas;
 
 }
 
@@ -42,7 +62,7 @@ void Solucion::mostrarLavados() {
 
 }
 
-void Solucion::mostrarPrendasFaltantes() {
+int Solucion::mostrarPrendasFaltantes() {
 
 	int contador_pren_falt = 0;
 
@@ -80,11 +100,59 @@ void Solucion::mostrarPrendasFaltantes() {
 	printf("\n");
 	printf("Faltan un total de %d prendas\n\n", contador_pren_falt);
 	
+	return contador_pren_falt;
+
+}
+
+bool Solucion::seEncuentraLaPrendaDeNombre(int nombre) {
+
+	bool se_encuentra = false;
+	int ind = 0;
+
+	while ((ind < this->lavados.size()) && !se_encuentra) {
+
+		se_encuentra = this->lavados[ind].tieneLaPrendaDeNombre(nombre);
+		ind++;
+
+	}
+
+	return se_encuentra;
 
 }
 
 Solucion::~Solucion() {
 
 	this->lavados.clear();
+
+}
+
+/****Funciones Privadas****/
+
+bool Solucion::yaPoseeAlgunaPrendaDeEste(Lavado* lavado) {
+
+	int cant_repeticiones = 0;
+	bool alguna_prenda_repetida = false;
+
+	for (int ind_prenda_lavado = 0; ind_prenda_lavado < lavado->devolverCantidadDePrendasEnElLavado(); ind_prenda_lavado++) {
+
+		for (int lav_sol = 0; lav_sol < this->lavados.size(); lav_sol++) {
+
+			if (this->lavados[lav_sol].tieneLaPrendaDeNombre(lavado->devolverPrendas()[ind_prenda_lavado].devolverNombre())){
+
+				cant_repeticiones++;
+
+			}
+
+		}
+
+	}
+
+	if (cant_repeticiones > 0) {
+
+		alguna_prenda_repetida = true;
+
+	}
+
+	return alguna_prenda_repetida;
 
 }
