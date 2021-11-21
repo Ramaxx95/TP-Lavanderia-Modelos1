@@ -13,5 +13,8 @@
 		para dicha Prenda. Ademas, una funcion que me devuelva la cantidad deseable de todos esos lavados ordenados de menor a mayor. Tambien, como este metodo no 
 		no me da una solucion completa (todavia queda alguna que otra Prenda fuera de la Solucion), cree una funcion que me permite ver que prenda falta y, a partir
 		de eso, crear un lavado con prendas faltantes y agregarlo a la solucion.
+	20/11: Agregue una funcion que busque, a partir de una lista de Lavados, aquellos que posean la mayor cantidad de prendas posibles. De esta manera, me aseguro de 
+		que la solucion posea la mayor cantidad de prendas posible para un solo lavado.
+		Tambien, mejore e implemente al algoritmo para buscar la solucion optima.
 
 *Comentarios finales:
