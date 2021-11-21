@@ -9,6 +9,7 @@ class Lavado {
 		~Lavado();
 		void asignarPosicion(int pos_nueva);
 		void aniadirPrenda(Prenda* prenda);
+		void quitarPrenda();
 		int devolverTiempo();
 		int devolverCantidadDePrendasEnElLavado();
 		bool esIgualA(Lavado* lavado);

@@ -77,6 +77,35 @@ void completarRestoDeLasPrendas(Solucion* sol) {
 
 }
 
+vector<Lavado>* buscarLavadosConMayorCantidadDePrendas(vector<Lavado>* lavados) {
+
+	vector<Lavado>* lavados_grandes = new vector<Lavado>;
+	int lav_mayor_cant_pren = 0;
+
+	for (int i = 0; i < lavados->size(); i++) {
+
+		if (lavados->at(i).devolverCantidadDePrendasEnElLavado() > lav_mayor_cant_pren) {
+
+			lav_mayor_cant_pren = lavados->at(i).devolverCantidadDePrendasEnElLavado();
+
+		}
+
+	}
+
+	for (int j = 0; j < lavados->size(); j++) {
+
+		if (lavados->at(j).devolverCantidadDePrendasEnElLavado() > 2) {//lav_mayor / 2
+
+			lavados_grandes->push_back(lavados->at(j));
+
+		}
+
+	}
+
+	return lavados_grandes;
+
+}
+
 //De una lista de lavados, devuelve la cantidad indicada de lavados cuyo tiempo son los mas chicos 
 //de la lista especificada
 vector<Lavado>* buscarLavadosConMenorTiempoDe(vector<Lavado>* lavados, int cant_lavados) {
@@ -117,46 +146,14 @@ vector<Lavado>* buscarLavadosConMenorTiempoDe(vector<Lavado>* lavados, int cant_
 
 }
 
-//funcion RECURSiVA
-//recorre cada compatible de "prenda" y si es compatible con el "lavado" completo->la agrega
-void buscarSiguienteCompatiblePara(Prenda* prenda, Lavado* lavado, int a_partir_de, vector<Lavado>* lavados) {
-
-	Lavado aux(lavados->size());
-	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
-
-	for (int i = a_partir_de; i < compatibles.size(); i++) {
-
-		if (lavado->esCompatibleCon(compatibles[i])) {
-
-			aux.aniadirPrenda(compatibles[i]);
-			lavados->push_back(aux);
-			buscarSiguienteCompatiblePara(prenda, &aux, a_partir_de + 1, lavados);
-
-		}
-
-		limpiarListaDeLavados(lavados);
-
-	}
-
-	for (int j = 0; j < lavado->devolverCantidadDePrendasEnElLavado() - 1; j++) {
-
-		aux.aniadirPrenda(&lavado->devolverPrendas()[j]);
-		lavados->push_back(aux);
-
-	}
-
-
-}
 
 //busca toda combinacion de lavado para una prenda en especial y las guarda de menor a mayor en una lista
 //de lavados
-//TODO: funciona pero solo devuelve la cantidad que tiene de compatibles la prenda en si (para la
-//prenda 1, solo devuelve 8 lavados cuando tendria que devolver 24)
+//TODO: funciona pero solo en el contexto del primer tp
 
-void buscarPosiblesLavadosPara(Prenda* prenda) {
+void buscarPosiblesLavadosPara(Prenda* prenda, vector<Lavado>* lavados) {
 
 	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
-	vector<Lavado> lavados;
 
 	int num_lavado = 0;
 
@@ -168,62 +165,69 @@ void buscarPosiblesLavadosPara(Prenda* prenda) {
 			if (lavado_aux.esCompatibleCon(compatibles[i])){
 
 				lavado_aux.aniadirPrenda(compatibles[i]);
-				buscarSiguienteCompatiblePara(prenda, &lavado_aux, i, &lavados);
-			
-			}
-			/*
-			if (lavados.size() > 0) {
-				for (int k = 0; k < lavados.size(); k++) { 
-					
-					if (lavados.at(k).esIgualA(&lavado_aux)) {
+				lavados->push_back(lavado_aux);
 
-						lavados.erase(lavados.begin()+k);
+				for (int j = 0; j < compatibles.size(); j++) {
+
+					if ((lavado_aux.esCompatibleCon(compatibles[j])) && (j != i)) {
+
+						lavado_aux.aniadirPrenda(compatibles[j]);
+						lavados->push_back(lavado_aux);
+
+						lavado_aux.quitarPrenda();
 
 					}
+
 				}
-					
+			
 			}
-			*/
-			lavados.push_back(lavado_aux);
+			
 			num_lavado++;
+		   
+	}
+
+	limpiarListaDeLavados(lavados);
+
+}
+
+//FUNCION QUE SE ENCARGA DE LA BUSQUEDA DE LA SOLUCION OPTIMA
+void buscarLavadosMinimos(vector<Prenda> prendas, Solucion* sol) {
+
+	vector<Lavado>* lavados_minimos = new vector<Lavado>;
+
+	for (int i = 0; i < prendas.size()/2; i++) {
+
+		vector<Lavado>* lav_min_i = new vector<Lavado>;
+
+		//Primero: buscamos todo posible lavado que se pueda hacer con la prenda "i"
+		buscarPosiblesLavadosPara(&prendas[i], lav_min_i);
+
+		//Despues: de los lavados encontrados, nos quedamos con los que lavan la mayor cantidad de prendas posibles
+		lav_min_i = buscarLavadosConMayorCantidadDePrendas(lav_min_i);
+
+		//Por ultimo: nos quedamos con aquellos lavados que tardan menos en realizarse
+		lav_min_i = buscarLavadosConMenorTiempoDe(lav_min_i, 1);
+
+		if (lavados_minimos->empty()) {
+
+			lavados_minimos->swap(*lav_min_i);
+
+		}
+		else {
+
+			lavados_minimos->insert(lavados_minimos->end(), lav_min_i->begin(), lav_min_i->end());
+
+		}
 		
 	}
 
-	/*DEBUG*/
-	
-	Solucion sol(385);//hardcodeo
-	sol.agregarLavados(lavados);
-	printf("Cantidad de lavados posibles para la Prenda %d\n\n", prenda->devolverNombre());
-	sol.mostrarLavados();
-	
-	Solucion sol_min(385);//hardcodeo
-	vector<Lavado>* lav_min = buscarLavadosConMenorTiempoDe(&lavados, 7);
-	sol_min.agregarLavados(*lav_min);
-	printf("7 lavados con menor tiempo de lavado para la Prenda 1\n\n");
-	sol_min.mostrarLavados();
-	/*END DEBUG*/
-}
+	sol->agregarLavados(*lavados_minimos);
 
-//POSIBLE FUNCION QUE ENCOMPASE LA BUSQUEDA DE LA SOLUCION OPTIMA
-void buscarLavadosMinimos(vector<Prenda> prendas, Solucion* sol) {
-
-	vector<Lavado> lavados_minimos;
-
-	for (int i = 0; i < prendas.size() / 2; i++) {
-
-		vector<Prenda*> compatibles = prendas[i].obtenerListaDeCompatibles();
-		Lavado lavado_a_agregar(i);
-		lavado_a_agregar.aniadirPrenda(&prendas[i]);
-
-
-		lavados_minimos.push_back(lavado_a_agregar);
-
-	}
-
-	sol->agregarLavados(lavados_minimos);
+	completarRestoDeLasPrendas(sol);
 
 	sol->mostrarLavados();
 	printf("tiempo: %d\n", sol->devolverTiempoTotal());
+	sol->mostrarPrendasFaltantes();
 
 }
 
@@ -248,19 +252,17 @@ int main(int argc, char* argv[]) {
 	vector<Prenda> lista = devolverListaDePrendas();
 	Solucion solucion(lista.size()); 
 
-	//buscarLavadosMinimos(devolverListaDePrendas(), &solucion);
+	buscarLavadosMinimos(lista, &solucion);
 	//buscarPosiblesLavadosPara(&lista[0]);
-	prueba();
+	//prueba();
 	liberar_memoria();
 }
 
 
 /*******BACKUP*******/
-//busca toda combinacion de lavado para una prenda en especial y las guarda de menor a mayor en una lista
-//de lavados
-//TODO: funciona en el contexto del primer tp. Expandir para entrar en el esquema del segundo tp
 
-/*void buscarPosiblesLavadosPara(Prenda* prenda) {
+/*
+void buscarPosiblesLavadosPara(Prenda* prenda) {
 
 	vector<Prenda*> compatibles = prenda->obtenerListaDeCompatibles();
 	vector<Lavado> lavados;
@@ -269,47 +271,84 @@ int main(int argc, char* argv[]) {
 
 	for (int i = 0; i < compatibles.size(); i++) {
 
-		if (prenda->esCompatibleCon(compatibles[i])) {
+			Lavado lavado_aux(num_lavado);
+			lavado_aux.aniadirPrenda(prenda);
 
-			for (int j = 0; j < compatibles[i]->devolverCantidadDeCompatibilidades(); j++) {
+			if (lavado_aux.esCompatibleCon(compatibles[i])){
 
-				Lavado lavado_aux(num_lavado);
-				lavado_aux.aniadirPrenda(prenda);
 				lavado_aux.aniadirPrenda(compatibles[i]);
+				lavados.push_back(lavado_aux);
 
-				bool es_comp = true;
-				int indice = 0;
-				while ((lavado_aux.devolverCantidadDePrendasEnElLavado() - indice > 0) && es_comp) {
+				for (int j = 0; j < compatibles.size(); j++) {
 
-					//antes era copatibles[i]
-					es_comp = lavado_aux.devolverPrendas()[indice].esCompatibleCon(compatibles[i]->obtenerListaDeCompatibles()[j]);
-					indice++;
+					if ((lavado_aux.esCompatibleCon(compatibles[j])) && (j != i)) {
 
-				}
+						lavado_aux.aniadirPrenda(compatibles[j]);
+						lavados.push_back(lavado_aux);
 
-				if (es_comp)
-				{
-					lavado_aux.aniadirPrenda(compatibles[i]->obtenerListaDeCompatibles()[j]);
-				}
+						lavado_aux.quitarPrenda();
 
-				if (lavados.size() > 0) {
-
-					for (int k = 0; k < lavados.size(); k++) {
-
-						if (lavados.at(k).esIgualA(&lavado_aux)) {
-
-							lavados.erase(lavados.begin() + k);
-
-						}
 					}
 
 				}
-				lavados.push_back(lavado_aux);
-				num_lavado++;
+
 			}
 
-		}
+			num_lavado++;
 
 	}
 
+	limpiarListaDeLavados(&lavados);
+
+	//DEBUG
+/*
+printf("Cantidad de lavados posibles para la Prenda %d\n\n", prenda->devolverNombre());
+for (int n = 0; n < lavados.size(); n++) {
+
+	printf("Lavado %d:\n", n + 1);
+
+	for (int prenda_n = 0; prenda_n < lavados[n].devolverCantidadDePrendasEnElLavado(); prenda_n++) {
+
+		printf(" %d ", lavados[n].devolverPrendas()[prenda_n]);
+
+	}
+
+	printf("\n\n");
+
+}
+
+vector<Lavado>* lav_min = buscarLavadosConMenorTiempoDe(&lavados, 7);
+printf("7 lavados con menor tiempo de lavado para la Prenda 1\n\n");
+
+for (int m = 0; m < lav_min->size(); m++) {
+
+	printf("Lavado %d:\n", m + 1);
+
+	for (int prenda_m = 0; prenda_m < lav_min->at(m).devolverCantidadDePrendasEnElLavado(); prenda_m++) {
+
+		printf(" %d ", lav_min->at(m).devolverPrendas()[prenda_m]);
+
+	}
+
+	printf("\n\n");
+
+}
+
+vector<Lavado>* lav_gran = buscarLavadosConMayorCantidadDePrendas(&lavados);
+printf("Los lavados con mayor cantidad de prendas para la Prenda 1\n\n");
+
+for (int k = 0; k < lav_gran->size(); k++) {
+
+	printf("Lavado %d:\n", k + 1);
+
+	for (int prenda_k = 0; prenda_k < lav_gran->at(k).devolverCantidadDePrendasEnElLavado(); prenda_k++) {
+
+		printf(" %d ", lav_gran->at(k).devolverPrendas()[prenda_k]);
+
+	}
+
+	printf("\n\n");
+
+}
+//END DEBUG
 }*/

@@ -67,6 +67,27 @@ void Lavado::aniadirPrenda(Prenda* prenda) {
 
 }
 
+//elimina la ULTIMA prenda que se encuentra en la lista de prendas
+void Lavado::quitarPrenda() {
+
+	this->prendas.pop_back();
+
+	int nuevo_tiempo_lavado = 0;
+
+	for (int i = 0; i < this->prendas.size(); i++) {
+
+		if (this->prendas[i].devolverTiempoDeLavado() > nuevo_tiempo_lavado) {
+
+			nuevo_tiempo_lavado = this->prendas[i].devolverTiempoDeLavado();
+
+		}
+
+	}
+
+	this->tiempo_lavado = nuevo_tiempo_lavado;
+
+}
+
 int Lavado::devolverTiempo() {
 
 	return this->tiempo_lavado;
