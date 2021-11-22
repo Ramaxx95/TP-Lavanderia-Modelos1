@@ -94,7 +94,7 @@ vector<Lavado>* buscarLavadosConMayorCantidadDePrendas(vector<Lavado>* lavados) 
 
 	for (int j = 0; j < lavados->size(); j++) {
 
-		if (lavados->at(j).devolverCantidadDePrendasEnElLavado() > 2) {//lav_mayor / 2
+		if (lavados->at(j).devolverCantidadDePrendasEnElLavado() > lav_mayor_cant_pren/2) {//lav_mayor / 2
 
 			lavados_grandes->push_back(lavados->at(j));
 
@@ -195,7 +195,7 @@ void buscarLavadosMinimos(vector<Prenda> prendas, Solucion* sol) {
 
 	vector<Lavado>* lavados_minimos = new vector<Lavado>;
 
-	for (int i = 0; i < prendas.size()/2; i++) {
+	for (int i = 0; i < 1; i++) { //prendas.size()/2
 
 		vector<Lavado>* lav_min_i = new vector<Lavado>;
 
@@ -239,7 +239,7 @@ void prueba() {
 
 int main(int argc, char* argv[]) {
 
-	leer_archivo((char *)"primer_problema.txt");
+	leer_archivo((char *)"segundo_problema.txt");
 
 	int res = get_params();
 	if (res > 0) {
@@ -253,7 +253,6 @@ int main(int argc, char* argv[]) {
 	Solucion solucion(lista.size()); 
 
 	buscarLavadosMinimos(lista, &solucion);
-	//buscarPosiblesLavadosPara(&lista[0]);
 	//prueba();
 	liberar_memoria();
 }
