@@ -1,0 +1,15 @@
+﻿  graph.c
+  graphics.c
+  node.c
+  nodesList.c
+  pnode.c
+  pnodesList.c
+  leer_dimac.c
+  lhk_branch_and_cut.c
+  main.c
+  Generando código
+  36 of 38 functions (94.7%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Generación de código finalizada
+  modelos_uno.vcxproj -> C:\Users\ramil\Documents\UBA\(71.14) Modelos y Optimización I\TPS\Tercera_entrega\modelos_uno.exe
