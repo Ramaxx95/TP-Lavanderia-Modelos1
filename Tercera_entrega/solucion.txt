@@ -1,108 +1,95 @@
-Column   0 (       x_1):  Value =                20
-Column   1 (       x_2):  Value =                 8
-Column  46 (      x_47):  Value =                13
-Column  57 (      x_58):  Value =                18
-Column  64 (      x_65):  Value =                20
-Column  79 (      x_80):  Value =                17
-Column  92 (      x_93):  Value =                 1
-Column  95 (     x_1_1):  Value =                 1
-Column 254 (    x_2_65):  Value =                 1
-Column 342 (    x_3_58):  Value =                 1
-Column 426 (    x_4_47):  Value =                 1
-Column 475 (     x_5_1):  Value =                 1
-Column 627 (    x_6_58):  Value =                 1
-Column 666 (     x_7_2):  Value =                 1
-Column 839 (    x_8_80):  Value =                 1
-Column 912 (    x_9_58):  Value =                 1
-Column 1029 (   x_10_80):  Value =                 1
-Column 1091 (   x_11_47):  Value =                 1
-Column 1140 (    x_12_1):  Value =                 1
-Column 1299 (   x_13_65):  Value =                 1
-Column 1376 (   x_14_47):  Value =                 1
-Column 1471 (   x_15_47):  Value =                 1
-Column 1521 (    x_16_2):  Value =                 1
-Column 1615 (    x_17_1):  Value =                 1
-Column 1774 (   x_18_65):  Value =                 1
-Column 1806 (    x_19_2):  Value =                 1
-Column 1964 (   x_20_65):  Value =                 1
-Column 1996 (    x_21_2):  Value =                 1
-Column 2136 (   x_22_47):  Value =                 1
-Column 2242 (   x_23_58):  Value =                 1
-Column 2280 (    x_24_1):  Value =                 1
-Column 2439 (   x_25_65):  Value =                 1
-Column 2516 (   x_26_47):  Value =                 1
-Column 2629 (   x_27_65):  Value =                 1
-Column 2660 (    x_28_1):  Value =                 1
-Column 2834 (   x_29_80):  Value =                 1
-Column 2929 (   x_30_80):  Value =                 1
-Column 3037 (   x_31_93):  Value =                 1
-Column 3104 (   x_32_65):  Value =                 1
-Column 3199 (   x_33_65):  Value =                 1
-Column 3276 (   x_34_47):  Value =                 1
-Column 3325 (    x_35_1):  Value =                 1
-Column 3484 (   x_36_65):  Value =                 1
-Column 3561 (   x_37_47):  Value =                 1
-Column 3674 (   x_38_65):  Value =                 1
-Column 3705 (    x_39_1):  Value =                 1
-Column 3879 (   x_40_80):  Value =                 1
-Column 3974 (   x_41_80):  Value =                 1
-Column 3991 (    x_42_2):  Value =                 1
-Column 4149 (   x_43_65):  Value =                 1
-Column 4181 (    x_44_2):  Value =                 1
-Column 4321 (   x_45_47):  Value =                 1
-Column 4449 (   x_46_80):  Value =                 1
-Column 4522 (   x_47_58):  Value =                 1
-Column 4560 (    x_48_1):  Value =                 1
-Column 4719 (   x_49_65):  Value =                 1
-Column 4807 (   x_50_58):  Value =                 1
-Column 4891 (   x_51_47):  Value =                 1
-Column 4940 (    x_52_1):  Value =                 1
-Column 5035 (    x_53_1):  Value =                 1
-Column 5209 (   x_54_80):  Value =                 1
-Column 5304 (   x_55_80):  Value =                 1
-Column 5377 (   x_56_58):  Value =                 1
-Column 5494 (   x_57_80):  Value =                 1
-Column 5556 (   x_58_47):  Value =                 1
-Column 5605 (    x_59_1):  Value =                 1
-Column 5764 (   x_60_65):  Value =                 1
-Column 5841 (   x_61_47):  Value =                 1
-Column 5936 (   x_62_47):  Value =                 1
-Column 5985 (    x_63_1):  Value =                 1
-Column 6080 (    x_64_1):  Value =                 1
-Column 6239 (   x_65_65):  Value =                 1
-Column 6362 (   x_66_93):  Value =                 1
-Column 6429 (   x_67_65):  Value =                 1
-Column 6460 (    x_68_1):  Value =                 1
-Column 6555 (    x_69_1):  Value =                 1
-Column 6707 (   x_70_58):  Value =                 1
-Column 6824 (   x_71_80):  Value =                 1
-Column 6904 (   x_72_65):  Value =                 1
-Column 6981 (   x_73_47):  Value =                 1
-Column 7094 (   x_74_65):  Value =                 1
-Column 7125 (    x_75_1):  Value =                 1
-Column 7220 (    x_76_1):  Value =                 1
-Column 7394 (   x_77_80):  Value =                 1
-Column 7489 (   x_78_80):  Value =                 1
-Column 7584 (   x_79_80):  Value =                 1
-Column 7679 (   x_80_80):  Value =                 1
-Column 7741 (   x_81_47):  Value =                 1
-Column 7790 (    x_82_1):  Value =                 1
-Column 7949 (   x_83_65):  Value =                 1
-Column 8026 (   x_84_47):  Value =                 1
-Column 8139 (   x_85_65):  Value =                 1
-Column 8234 (   x_86_65):  Value =                 1
-Column 8344 (   x_87_80):  Value =                 1
-Column 8424 (   x_88_65):  Value =                 1
-Column 8534 (   x_89_80):  Value =                 1
-Column 8614 (   x_90_65):  Value =                 1
-Column 8645 (    x_91_1):  Value =                 1
-Column 8804 (   x_92_65):  Value =                 1
-Column 8914 (   x_93_80):  Value =                 1
-Column 8987 (   x_94_58):  Value =                 1
-Column 9026 (    x_95_2):  Value =                 1
-
-Parece que no se llego al optimo, status: 107
-Optimo: 97.000000
-Cota: 70.000000
-Nodos: 3315
-Tiempo: 1800.203000
+1 1
+3 1
+6 1
+8 1
+12 1
+14 1
+17 1
+19 1
+24 1
+26 1
+29 1
+31 1
+35 1
+37 1
+40 1
+42 1
+48 1
+50 1
+53 1
+55 1
+59 1
+61 1
+64 1
+66 1
+71 1
+73 1
+76 1
+78 1
+82 1
+84 1
+87 1
+89 1
+2 2
+4 2
+7 2
+9 2
+13 2
+15 2
+18 2
+20 2
+25 2
+27 2
+30 2
+32 2
+36 2
+38 2
+41 2
+43 2
+49 2
+51 2
+54 2
+56 2
+60 2
+62 2
+65 2
+67 2
+72 2
+74 2
+77 2
+79 2
+83 2
+85 2
+88 2
+90 2
+5 3
+10 3
+16 3
+21 3
+28 3
+33 3
+39 3
+44 3
+52 3
+57 3
+63 3
+68 3
+75 3
+80 3
+86 3
+91 3
+11 4
+22 4
+34 4
+45 4
+58 4
+69 4
+81 4
+92 4
+23 5
+46 5
+70 5
+93 5
+47 6
+94 6
+95 7
