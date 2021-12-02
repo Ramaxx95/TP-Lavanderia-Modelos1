@@ -211,6 +211,19 @@ static int populatebyrow(CPXENVptr env, CPXLPptr lp, bool **matriz, int* pesos, 
 		}
 	}
 
+	//Se agrega esta restriccion
+	//Eliminacion Simetria por Xk>=Xk+1
+	for (k = 0; k < maximoColor - 1; k++) {
+		posicionVariables[0] = k;
+		coeficienteVariables[0] = 1;
+		posicionVariables[1] = k + 1;
+		coeficienteVariables[1] = -1;
+		status = CPXaddrows(env, lp, 0, 1, 2, NULL, "G", &zero, posicionVariables, coeficienteVariables, NULL, NULL);
+		if (status)
+			goto TERMINATE;
+		
+	}
+
 	TERMINATE:
 
 	free_and_null((char **) &posicionVariables);
@@ -262,7 +275,7 @@ int procesar_Tp(char *path, char *pathOutput) {
 
 	///----
 	int *coloreoValido = (int *) malloc(Nr_vert * sizeof(int));
-	int maxColor = Nr_vert;
+	int maxColor = 7;	//int maxColor = Nr_vert;
 	buscarSolucionInicial(coloreoValido);
 
 	status = populatebyrow(env, lp, matriz, pesos, Nr_vert, maxColor);
@@ -382,6 +395,50 @@ int procesar_Tp(char *path, char *pathOutput) {
 void buscarSolucionInicial(int* coloreoValido) {
 	int i;
 	for (i = 0; i < Nr_vert; i++) {
-		coloreoValido[i] = i;
+		//coloreoValido[i] = i;
+	
+		//Hardcodeo la solucion aproximada de la entrega anterior
+		if ((i == 1) || (i == 3) || (i == 6) || (i == 8) || (i == 12) || (i == 14) || (i == 17) || (i == 19) || (i == 24) || (i == 26) || (i == 29) || (i == 31) ||
+			(i == 35) || (i == 37) || (i == 40) || (i == 42) || (i == 48) || (i == 50) || (i == 53) || (i == 55) || (i == 59) || (i == 61) || (i == 64) ||
+			(i == 66) || (i == 71) || (i == 73) || (i == 76) || (i == 78) || (i == 82) || (i == 84) || (i == 87) || (i == 89)) {
+
+			coloreoValido[i] = 0;
+
+		}
+		else if ((i == 2) || (i == 4) || (i == 7) || (i == 9) || (i == 13) || (i == 15) || (i == 18) || (i == 20) || (i == 25) || (i == 27) || (i == 30) || (i == 32) || 
+			(i == 36) || (i == 38) || (i == 41) || (i == 43) || (i == 49) || (i == 51) || (i == 54) || (i == 56) || (i == 60) || (i == 62) || (i == 65) || (i == 67) || 
+			(i == 72) || (i == 74) || (i == 77) || (i == 79) || (i == 83) || (i == 85) || (i == 88) || (i == 90)) {
+
+			coloreoValido[i] = 1;
+
+		}
+		else if ((i == 5) || (i == 10) || (i == 16) || (i == 21) || (i == 28) || (i == 33) || (i == 39) || (i == 44) || (i == 52) || (i == 57) || (i == 63) || 
+			(i == 68) || (i == 75) || (i == 80) || (i == 86) || (i == 91)) {
+
+			coloreoValido[i] = 2;
+
+		}
+		else if ((i == 11) || (i == 22) || (i == 34) || (i == 45) || (i == 58) || (i == 69) || (i == 81) || (i == 92)) {
+
+			coloreoValido[i] = 3;
+
+		}
+		else if ((i == 23) || (i == 46) || (i == 70) || (i == 93)) {
+
+			coloreoValido[i] = 4;
+
+		}
+		else if ((i == 47) || (i == 94)) {
+
+			coloreoValido[i] = 5;
+
+		}
+		else if (i == 95) {
+
+			coloreoValido[i] = 6;
+
+		}
 	}
+	
+	
 }
