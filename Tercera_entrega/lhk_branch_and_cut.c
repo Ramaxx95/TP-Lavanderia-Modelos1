@@ -1,6 +1,7 @@
-#define TIEMPO_MAXIMO_EN_SEGUNDOS 1800
+#define TIEMPO_MAXIMO_EN_SEGUNDOS 600 //1800
 #define CORTAR_A_DISTANCIA 0
 #define CPXSIZE_BITS_TEST_DISABLE
+#define FIN_ARRAY 1000
 
 #define TIPO_VARIABLE CPX_BINARY
 
@@ -19,6 +20,15 @@ free_and_null(char **ptr);
 static int resolver(CPXENVptr env, CPXLPptr lp);
 
 void buscarSolucionInicial(int* coloreoValido);
+
+/*HEURISTICAS*/
+int obtenerLargoDelLavado(int* lavado);
+int* buscarPrendasMasPesadasCompatibles();
+bool laPrendaEsCompatibleCon(int num_pren_1, int num_pren_2);
+bool laPrendaEsCompatibleConElLavado(int prenda, int* lavado);
+bool laPrendaSeEncuentraEnElLavado(int prenda, int* lavado);
+int* completarLavado(int* lavado);
+int* crearLavadoAPartirDePrendasFaltantes(int* lavado, bool* prendas_ya_usadas);
 
 int mejorSolucionValida = 0;
 
@@ -211,6 +221,7 @@ static int populatebyrow(CPXENVptr env, CPXLPptr lp, bool **matriz, int* pesos, 
 		}
 	}
 
+	
 	//Se agrega esta restriccion
 	//Eliminacion Simetria por Xk>=Xk+1
 	for (k = 0; k < maximoColor - 1; k++) {
@@ -393,52 +404,326 @@ int procesar_Tp(char *path, char *pathOutput) {
 } /* END main */
 
 void buscarSolucionInicial(int* coloreoValido) {
-	int i;
-	for (i = 0; i < Nr_vert; i++) {
-		//coloreoValido[i] = i;
 	
-		//Hardcodeo la solucion aproximada de la entrega anterior
-		if ((i == 1) || (i == 3) || (i == 6) || (i == 8) || (i == 12) || (i == 14) || (i == 17) || (i == 19) || (i == 24) || (i == 26) || (i == 29) || (i == 31) ||
-			(i == 35) || (i == 37) || (i == 40) || (i == 42) || (i == 48) || (i == 50) || (i == 53) || (i == 55) || (i == 59) || (i == 61) || (i == 64) ||
-			(i == 66) || (i == 71) || (i == 73) || (i == 76) || (i == 78) || (i == 82) || (i == 84) || (i == 87) || (i == 89)) {
+	int i;
+	bool* prendas_ya_usadas = (bool*)malloc(Nr_vert * sizeof(bool));
 
-			coloreoValido[i] = 0;
+	for (int j = 0; j < Nr_vert; j++) {
 
-		}
-		else if ((i == 2) || (i == 4) || (i == 7) || (i == 9) || (i == 13) || (i == 15) || (i == 18) || (i == 20) || (i == 25) || (i == 27) || (i == 30) || (i == 32) || 
-			(i == 36) || (i == 38) || (i == 41) || (i == 43) || (i == 49) || (i == 51) || (i == 54) || (i == 56) || (i == 60) || (i == 62) || (i == 65) || (i == 67) || 
-			(i == 72) || (i == 74) || (i == 77) || (i == 79) || (i == 83) || (i == 85) || (i == 88) || (i == 90)) {
+		prendas_ya_usadas[j] = false;
 
-			coloreoValido[i] = 1;
-
-		}
-		else if ((i == 5) || (i == 10) || (i == 16) || (i == 21) || (i == 28) || (i == 33) || (i == 39) || (i == 44) || (i == 52) || (i == 57) || (i == 63) || 
-			(i == 68) || (i == 75) || (i == 80) || (i == 86) || (i == 91)) {
-
-			coloreoValido[i] = 2;
-
-		}
-		else if ((i == 11) || (i == 22) || (i == 34) || (i == 45) || (i == 58) || (i == 69) || (i == 81) || (i == 92)) {
-
-			coloreoValido[i] = 3;
-
-		}
-		else if ((i == 23) || (i == 46) || (i == 70) || (i == 93)) {
-
-			coloreoValido[i] = 4;
-
-		}
-		else if ((i == 47) || (i == 94)) {
-
-			coloreoValido[i] = 5;
-
-		}
-		else if (i == 95) {
-
-			coloreoValido[i] = 6;
-
-		}
 	}
 	
+	for (i = 0; i < 7; i++) {
+		
+		if (i == 0) {
+
+			int* prendas_pesadas = buscarPrendasMasPesadasCompatibles();
+			int indice_prendas = 0;
+
+			while (prendas_pesadas[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas_pesadas[indice_prendas]] = i;
+				prendas_ya_usadas[prendas_pesadas[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas_pesadas);
+
+		}
+
+		else if (i == 1) {
+
+			int* prendas1 = (int*) malloc(sizeof(int));
+			prendas1[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+
+			prendas1 = crearLavadoAPartirDePrendasFaltantes(prendas1, prendas_ya_usadas);
+
+			while (prendas1[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas1[indice_prendas]] = i;
+				prendas_ya_usadas[prendas1[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas1);
+		}
+
+		else if (i == 2) {
+
+			int* prendas2 = (int*)malloc(sizeof(int));
+			prendas2[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+
+			prendas2 = crearLavadoAPartirDePrendasFaltantes(prendas2, prendas_ya_usadas);
+
+			while (prendas2[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas2[indice_prendas]] = i;
+				prendas_ya_usadas[prendas2[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas2);
+		}
+
+		else if (i == 3) {
+
+			int* prendas3 = (int*)malloc(sizeof(int));
+			prendas3[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+
+			prendas3 = crearLavadoAPartirDePrendasFaltantes(prendas3, prendas_ya_usadas);
+
+			while (prendas3[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas3[indice_prendas]] = i;
+				prendas_ya_usadas[prendas3[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas3);
+		}
+
+		else if (i == 4) {
+
+			int* prendas4 = (int*)malloc(sizeof(int));
+			prendas4[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+
+			prendas4 = crearLavadoAPartirDePrendasFaltantes(prendas4, prendas_ya_usadas);
+
+			while (prendas4[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas4[indice_prendas]] = i;
+				prendas_ya_usadas[prendas4[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas4);
+		}
+
+		else if (i == 5) {
+
+			int* prendas5 = (int*)malloc(sizeof(int));
+			prendas5[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+				
+			prendas5 = crearLavadoAPartirDePrendasFaltantes(prendas5, prendas_ya_usadas);
+
+			while (prendas5[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas5[indice_prendas]] = i;
+				prendas_ya_usadas[prendas5[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas5);
+		}
+
+		else if (i == 6) {
+
+			int* prendas6 = (int*)malloc(sizeof(int));
+			prendas6[0] = FIN_ARRAY;
+			int indice_prendas = 0;
+
+			prendas6 = crearLavadoAPartirDePrendasFaltantes(prendas6, prendas_ya_usadas);
+
+			while (prendas6[indice_prendas] != FIN_ARRAY) {
+
+				coloreoValido[prendas6[indice_prendas]] = i;
+				prendas_ya_usadas[prendas6[indice_prendas]] = true;
+
+				indice_prendas++;
+
+			}
+
+			free(prendas6);
+		}
+
+	}
+
+	free(prendas_ya_usadas);
+
+}
+
+/******HEURISTICAS******/
+bool laPrendaEsCompatibleCon(int num_pren_1, int num_pren_2) {
+
+	bool es_compat = false;
+
+	if (matriz[num_pren_1][num_pren_2] == 0) {
+
+		es_compat = true;
+
+	}
+
+	return es_compat;
+
+}
+
+bool laPrendaEsCompatibleConElLavado(int prenda, int* lavado) {
+
+	bool es_compat = false;
+	int indice_lavado = 0;
+
+	while (lavado[indice_lavado] != FIN_ARRAY) {
+
+		if (!laPrendaEsCompatibleCon(prenda, lavado[indice_lavado])) {
+
+			return es_compat;
+
+		}
+
+		indice_lavado++;
+
+	}
+
+	return es_compat = true;
+
+}
+
+int* buscarPrendasMasPesadasCompatibles() {
+
+	int* prendas_pesadas = (int*) malloc(17 * sizeof(int));
+	int indice_pren = 0;
+
+	for (int i = 0; i < Nr_vert; i++) {
+
+		if (pesos[i] > 17) {
+
+			prendas_pesadas[indice_pren] = i;
+			indice_pren++;
+
+			
+		}
+
+	}
+	//agrego la posicion que actua como final del arreglo
+	prendas_pesadas[16] = FIN_ARRAY;
+
+	int tam_prendas = indice_pren;
+
+	//elimino toda prenda que no sea compatible con el lavado
+	for (int j = 0; j < tam_prendas; j++) {
+
+		if (!laPrendaEsCompatibleConElLavado(prendas_pesadas[j], prendas_pesadas)) {
+
+			//muevo todas las prendas siguientes un lugar antes
+			for (int k = j; k < tam_prendas - 1; k++) {
+
+				prendas_pesadas[k] = prendas_pesadas[k + 1];
+
+			}
+
+			//actualizo el tamanio del lavado
+			prendas_pesadas[tam_prendas] = FIN_ARRAY;
+			tam_prendas--;
+
+		}
 	
+	}
+
+	prendas_pesadas = completarLavado(prendas_pesadas);
+
+	return prendas_pesadas;
+
+}
+
+bool laPrendaSeEncuentraEnElLavado(int prenda, int* lavado) {
+
+	bool esta_en_el_lavado = false;
+	int indice_prenda = 0;
+
+	while (lavado[indice_prenda] != FIN_ARRAY) {
+		 
+		if (lavado[indice_prenda] == prenda) {
+
+			return esta_en_el_lavado = true;
+
+		}
+
+		indice_prenda++;
+
+	}
+
+	return esta_en_el_lavado;
+
+}
+
+int obtenerLargoDelLavado(int* lavado) {
+
+	int largo = 0;
+
+	while (lavado[largo] != FIN_ARRAY) {
+
+		largo++;
+
+	}
+
+	return largo;
+
+}
+
+int* completarLavado(int* lavado) {
+
+	int largo_lavado = obtenerLargoDelLavado(lavado);
+
+	for (int i = 0; i < Nr_vert; i++) {
+
+		if (laPrendaEsCompatibleConElLavado(i, lavado) && !laPrendaSeEncuentraEnElLavado(i, lavado)) {
+
+			lavado = (int*) realloc(lavado, (largo_lavado + 2)*sizeof(int));
+			largo_lavado++;
+			lavado[largo_lavado - 1] = i;
+			lavado[largo_lavado] = FIN_ARRAY;
+
+		}
+
+	}
+	
+	return lavado;
+
+}
+
+
+int* crearLavadoAPartirDePrendasFaltantes(int* lavado, bool* prendas_ya_usadas) {
+
+	for (int i = 0; i < Nr_vert; i++) {
+
+		if ((obtenerLargoDelLavado(lavado) == 0) && prendas_ya_usadas[i] == false) {
+
+			int largo_lavado = obtenerLargoDelLavado(lavado);
+			lavado = (int*)realloc(lavado, (largo_lavado + 2) * sizeof(int));
+			lavado[largo_lavado] = i;
+			lavado[largo_lavado + 1] = FIN_ARRAY;
+
+		}
+
+		else if (prendas_ya_usadas[i] == false && laPrendaEsCompatibleConElLavado(i, lavado)) {
+
+			int largo_lavado = obtenerLargoDelLavado(lavado);
+			lavado = (int*)realloc(lavado, (largo_lavado + 2) * sizeof(int));
+			lavado[largo_lavado] = i;
+			lavado[largo_lavado + 1] = FIN_ARRAY;
+
+		}
+
+	}
+
+	return lavado;
+
 }

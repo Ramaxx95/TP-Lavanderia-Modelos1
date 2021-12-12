@@ -1,15 +1,31 @@
 
-
 *Ideas sobre como resolverlo:
+	Primero lo voy a  correr como lo propone el enunciado. Mas adelante voy a tratar de usar la heuristica usada en la segunda 
+	entrega para establecer la primera solucion.
 
 *Comentarios de desarrollo:
 	30/11: corri el codigo sin ningun cambio. Luego de agotar el tiempo dado por determinado del algoritmo (dice que es de 1800, 
-	voy a asumir segundos), nos devuelve un "resultado optimo" de Z=97 que corresponde a 7 lavados en total.
+	voy a asumir segundos), nos devuelve un "resultado optimo" de Z=97 que corresponde a 7 lavados en total. Cabe aclarar que este 
+	no es el resultado optimo real ya que, al terminar de correr, la salida dice que termino con status = 107. Esto se da cuando se
+	agota el tiempo y todavia no se llego a un optimo.
 
 	2/12: segui los pasos dados en la consigna. A partir del algoritmo usado en la segunda entrega, hardcodee ese resultado en
 	buscarResultadoInicial() y limite a maxColor a que sean 7 lavados, ademas de agregar la restriccion que nos dieron. Esto mejoro
 	considerablemente el resultado: el optimo paso a ser 91 y en vez de tardar 30 minutos buscando la respuesta esta vez la 
 	consiguio en 65.4 segundos. Igual, de este resultado el output me dice que el optimo obtenido tiene un gap de 7.69%, o sea 
-	que todavia no llegamos  al optimo real.
+	que no llega al optimo real, pero estima a un valor bastante cercano.
 
 *comentarios finales:
+	-Como ya dije anteriormente, correr el algoritmo sin ningun cambio tarda demasiado y no llega al optimo.
+	-Si lo que hacemos es solo hardcodear la solucion dada por la heuristica de la segunda entrega, el resultado es practicamente
+	igual: no se llega al optimo y se acaba el tiempo limite de ejecucion del algoritmo.
+	-Ahora modificamos la variable local "maxColor" a 7, ahora llega a hacer una poda de arbol llegando al resultado optimo, pero 
+	tarda mas de 10 minutos hasta llegar a la solucion y con un gap considerablemente grande (un 23%).
+	-Agregando la restriccion, llegamos al optimo en un promedio de un minuto, con un gap bastante chico (7.69%).
+
+	La razon por la que agregar la restriccion ayuda a mejorar considerablemente el resultado es que, por la composicion general de 
+	este problema, hay muchas variables repetidas (hay muchas combinaciones posibles para un mismo lavado, que a su vez 
+	presenta mismos valores de tiempo de lavado) haciendo que el metodo de Branch&Bound termine analizando un mismo resultado 
+	multiples veces, en vez de cortarlo y seguir con otra solucion. Gracias a esta restriccion, lo que se hace es eliminar esas
+	repeticiones SIN cortar al verdadero optimo del problema, haciendo que el algoritmo no pierda el tiempo en pasos ya vistos
+	y acotar a una solucion mas rapidamente. 
